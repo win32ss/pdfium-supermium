@@ -14,6 +14,7 @@
 #include "build/build_config.h"
 #include "core/fxcrt/fx_codepage.h"
 #include "core/fxcrt/fx_memcpy_wrappers.h"
+#include "core/fxcrt/win/win_util.h"
 #include "core/fxge/cfx_defaultrenderdevice.h"
 #include "core/fxge/cfx_font.h"
 #include "core/fxge/cfx_glyphbitmap.h"
@@ -238,7 +239,10 @@ SkFontMgr* g_fontmgr = nullptr;
 void CFX_GlyphCache::InitializeGlobals() {
   CHECK(!g_fontmgr);
 #if BUILDFLAG(IS_WIN)
-  g_fontmgr = SkFontMgr_New_DirectWrite().release();
+  if(pdfium::base::win::IsUser32AndGdi32Available())
+	g_fontmgr = SkFontMgr_New_GDI().release();
+  else
+    g_fontmgr = SkFontMgr_New_DirectWrite().release();
 #elif BUILDFLAG(IS_APPLE)
   g_fontmgr = SkFontMgr_New_CoreText(nullptr).release();
 #else
