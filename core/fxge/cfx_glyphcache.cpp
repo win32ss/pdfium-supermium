@@ -239,7 +239,7 @@ SkFontMgr* g_fontmgr = nullptr;
 void CFX_GlyphCache::InitializeGlobals() {
   CHECK(!g_fontmgr);
 #if BUILDFLAG(IS_WIN)
-  if(pdfium::base::win::IsUser32AndGdi32Available())
+  if(pdfium::IsUser32AndGdi32Available())
 	g_fontmgr = SkFontMgr_New_GDI().release();
   else
     g_fontmgr = SkFontMgr_New_DirectWrite().release();
